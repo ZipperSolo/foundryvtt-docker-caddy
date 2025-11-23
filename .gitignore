@@ -1,0 +1,12 @@
+# Secrets and sensitive configuration
+secrets.json
+
+# Docker configuration (may contain sensitive info)
+docker-compose.yml
+Caddyfile
+
+# Data directory
+data/
+
+# Environment files
+.env

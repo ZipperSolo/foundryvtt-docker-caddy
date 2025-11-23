@@ -1,0 +1,43 @@
+secrets:
+  config_json:
+    file: ./secrets.json
+
+services:
+  foundryvtt:
+    image: felddy/foundryvtt:release
+    hostname: foundry_host
+    init: true
+    restart: unless-stopped
+    volumes:
+      - ./data:/data
+    environment:
+      - FOUNDRY_MINIFY_STATIC_FILES=true
+      - FOUNDRY_HOSTNAME=foundry.yourdomain.com
+      - FOUNDRY_PROXY_SSL=true
+      - FOUNDRY_PROXY_PORT=443
+    secrets:
+      - source: config_json
+        target: config.json
+    networks:
+      - foundry_network
+
+  caddy:
+    image: caddy:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - foundry_network
+
+networks:
+  foundry_network:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:
